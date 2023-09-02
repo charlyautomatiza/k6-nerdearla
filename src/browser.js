@@ -1,10 +1,21 @@
-import { chromium } from 'k6/experimental/browser';
+import { browser } from 'k6/experimental/browser';
 import { check } from 'k6';
 
 // We need ENV variable -> K6_BROWSER_ENABLED=true 
+export const options = {
+  scenarios: {
+    ui: {
+      executor: 'shared-iterations',
+      options: {
+        browser: {
+          type: 'chromium',
+        },
+      },
+    },
+  },
+}
 
 export default async function () {
-  const browser = chromium.launch({ headless: false });
   const page = browser.newPage();
 
   try {
@@ -22,6 +33,5 @@ export default async function () {
     });
   } finally {
     page.close();
-    browser.close();
   }
 }
